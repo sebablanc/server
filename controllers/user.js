@@ -40,7 +40,7 @@ module.exports = {
             console.error("userController - create - ERROR: al intentar guardar el usuario", error.original.code);
             console.info("userController - create - END");
             console.log(error);
-            return res.status(404).send({
+            return res.status(400).send({
                 exito: false,
                 messages: [error && error.original && error.original.code ? errors[error.original.code] : 'Ocurrió un error al intentar guardar sus datos.'],
                 usuarios: null

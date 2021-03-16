@@ -2,6 +2,7 @@ const express    = require('express');
 const logger     = require('morgan');
 const bodyParser = require('body-parser');
 const http       = require('http');
+const cors = require('cors');
 
 // Creando app express;
 const app = express();
@@ -12,6 +13,7 @@ app.use(logger('dev'));
 // Parseador de data en las peticiones
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(cors());
 
 // rutas
 require('./routes/localidadRoutes')(app);
