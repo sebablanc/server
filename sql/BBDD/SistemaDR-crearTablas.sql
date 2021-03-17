@@ -298,7 +298,7 @@ IF(NEW.pass='' OR NEW.pass is NULL)THEN
 ELSIF (OLD.pass=NEW.pass) THEN
 	NEW.pass := NEW.pass;
 ELSE
-	NEW.pass := crypt(NEW.pass, gen_salt('md5'));
+	NEW.pass := encode(digest(NEW.pass, 'sha1'), 'hex');
 END IF;
 RETURN NEW;
 END; $funcemp$ LANGUAGE plpgsql;

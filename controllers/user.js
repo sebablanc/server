@@ -29,6 +29,7 @@ module.exports = {
             console.info("userController - create - END");
             
             // habilitar cuando este correctamente implementado el mail de verificación
+            //req.headers.origin ----> para obtener la página de procedencia
             //let emailSended = emailSend.sendEmail(user.email, 'Verificación', 'Este es el mensaje de verificación');
             return res.status(200).send({
                 exito: true,
@@ -177,7 +178,7 @@ module.exports = {
                 usuarios.forEach( usuario => {
                     delete usuario.pass;
                 });
-                personaEncontrada = await user.findAll({include: [ {model: persona, as: 'persona'}], attributes:{ exclude: ['pass'] }, where: {id: usuarios[0].id},});
+                personaEncontrada = await user.findAll({include: [ {model: persona, as: 'persona'}], attributes:{ exclude: ['pass', 'personaId'] }, where: {id: usuarios[0].id},});
             }
             return res.status(200).send({
                exito: true,
