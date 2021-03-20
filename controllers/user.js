@@ -38,9 +38,8 @@ module.exports = {
             });
         })
         .catch(error => {
-            console.error("userController - create - ERROR: al intentar guardar el usuario", error.original.code);
+            console.error("userController - create - ERROR: al intentar guardar el usuario", error);
             console.info("userController - create - END");
-            console.log(error);
             return res.status(400).send({
                 exito: false,
                 messages: [error && error.original && error.original.code ? errors[error.original.code] : 'Ocurrió un error al intentar guardar sus datos.'],
@@ -63,8 +62,6 @@ module.exports = {
                 usuarios: null
             });
         }
-
-        console.log(verifyResponse);
 
         user.update(verifyResponse.user, {where: {id: verifyResponse.user.id}})
         .then(num => {
@@ -174,15 +171,25 @@ module.exports = {
         db.sequelize.query(`SELECT * FROM loginUser(:email, :pass)`, {replacements: { email: email, pass: pass }, type: QueryTypes.SELECT})
         .then(async usuarios => {
             let personaEncontrada = null;
+            let exito = false;
+            let messages = [];
+
             if(usuarios.length > 0){
+                exito=true;
+                messages.push('Usuario loggeado');
                 usuarios.forEach( usuario => {
                     delete usuario.pass;
                 });
                 personaEncontrada = await user.findAll({include: [ {model: persona, as: 'persona'}], attributes:{ exclude: ['pass', 'personaId'] }, where: {id: usuarios[0].id},});
-            }
+            } else if(usuarios.length == 0){
+                exito=false;
+                messages.push('Usuario y/o contraseña incorrecta');
+            } 
+
+
             return res.status(200).send({
-               exito: true,
-               messages: ['Lista de usuarios encontrada.'],
+               exito: exito,
+               messages: messages,
                usuarios: personaEncontrada ? personaEncontrada : usuarios
            });
         })

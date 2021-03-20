@@ -45,6 +45,13 @@ module.exports.verifyHelper = {
                             parsedUser[key] = req.body[key];
                         }
                         break;
+                    case "tipo":
+                        if(req.body[key] == null || req.body[key] == undefined || req.body[key].trim() == '' && (userAction != httpRequestActions.FIND)){
+                            parsedUser[key] = 'Usuario';
+                        } else {
+                            parsedUser[key] = req.body[key];
+                        }
+                        break;
                     case "id":
                     case "activated":
                     case "personaid":

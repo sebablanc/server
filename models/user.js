@@ -38,6 +38,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       field: 'personaid'
     },
+    tipo:{ 
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     createdAt: {
       type: DataTypes.DATE,
       field: 'createdat'

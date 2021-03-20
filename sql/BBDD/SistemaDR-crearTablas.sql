@@ -1,12 +1,12 @@
 DROP USER administrador;
 DROP TABLE IF EXISTS asistencia;
-DROP TABLE IF EXISTS inscDesc;
+DROP TABLE IF EXISTS inscripcionDescuento;
 DROP TABLE IF EXISTS cuota;
 DROP TABLE IF EXISTS alumnocomision;
 DROP TABLE IF EXISTS comision;
 DROP TABLE IF EXISTS personacurso;
 DROP TABLE IF EXISTS alumno;
-DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS userdr;
 DROP TABLE IF EXISTS persona;
 DROP TABLE IF EXISTS localidad;
 DROP TABLE IF EXISTS descuento;
@@ -83,6 +83,7 @@ CREATE TABLE userDR(
 	pass varchar(255) NOT NULL,
 	activated boolean DEFAULT false,
 	personaId smallint,
+	tipo varchar(13) DEFAULT 'Usuario',
 	createdAt Date,
     updatedAt Date,
 	CONSTRAINT pk_user PRIMARY KEY (id),
@@ -104,7 +105,7 @@ CREATE TABLE alumno(
 CREATE TABLE comision(
 	id serial NOT NULL,
 	codComision smallint NOT NULL,
-	cursoId varchar(30) NOT NULL,
+	cursoId smallint NOT NULL,
 	dias varchar(20),
 	horaDesde time,
 	horaHasta time,

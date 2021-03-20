@@ -7,7 +7,7 @@
 -------------------------- login de usuario ------------------------------
 --------------------------------------------------------------------------
 
-CREATE TYPE USERDRLOGIN AS (id integer,email varchar(50),pass varchar(255),activated boolean,personaId smallint,createdAt Date,updatedAt Date);
+CREATE TYPE USERDRLOGIN AS (id integer,email varchar(50),pass varchar(255),activated boolean,personaId smallint, tipo varchar(13), createdAt Date,updatedAt Date);
 
 DROP FUNCTION IF EXISTS loginUser;
 
