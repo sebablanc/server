@@ -323,5 +323,21 @@ module.exports = {
                personas: personas
            });
         })
+    },
+
+    findLastNroCuenta(req, res){
+        persona.findOne({attributes: ['nroCuenta'], order: [['id', 'DESC']], limit: 1})
+        .then(nroCuenta => {
+            return res.status(200).send({
+                exito: true,
+                messages: ['Nro de cuenta encontrado.'],
+                nroCuenta: nroCuenta
+            })
+        })
+        .catch(error => res.status(404).send({
+            exito: false,
+            messages: ['Error al intentar obtener el último número de cuenta', error],
+            nroCuenta: null
+        }))
     }
 }

@@ -6,4 +6,5 @@ module.exports = (app) => {
     app.delete('/api/persona/delete', personaController.delete);
     app.get('/api/persona/all', personaController.findAll);
     app.get('/api/persona/find', personaController.find);
+    app.get('/api/persona/findLastNroCuenta', personaController.findLastNroCuenta);
 }
