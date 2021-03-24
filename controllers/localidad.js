@@ -198,7 +198,9 @@ module.exports = {
     },
 
     findAll(req, res) {
-        localidad.findAll()
+        localidad.findAll({
+            order: ['ciudad']
+        })
         .then(localidades => {
             return res.status(200).send({
                 exito: true,
@@ -269,7 +271,8 @@ module.exports = {
         }
         
         localidad.findAll({
-            where: filters
+            where: filters,
+            order: ['ciudad']
         })
         .then(localidades =>{
             console.info("localidadController - find - END");
