@@ -67,13 +67,13 @@ module.exports = {
             });
         }
 
-        persona.create(objectToSend, {attributes:{ exclude: ['localidadId'] }})
+        persona.create(objectToSend, {include: [ {model: localidad, as: 'localidad'} ], attributes:{ exclude: ['localidadId'] }})
         .then(persona =>{ 
             console.info("personaController - create - END");
             return res.status(200).send({
                 exito: true,
                 messages: ['persona creada correctamente'],
-                personas: persona
+                personas: [persona]
             });
         })
         .catch((error) => {
