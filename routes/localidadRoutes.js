@@ -5,5 +5,5 @@ module.exports = (app) => {
     app.put('/api/localidad/update', localidadController.update);
     app.delete('/api/localidad/delete', localidadController.delete);
     app.get('/api/localidad/all', localidadController.findAll);
-    app.get('/api/localidad/find', localidadController.find);
+    app.post('/api/localidad/find', localidadController.find);
 }
