@@ -45,6 +45,8 @@ module.exports = {
                 case "email":
                 case "otromedio":
                 case "localidadid":
+                case "createdat":
+                case "updatedat":
                     objectToSend[key] = req.body[key];
                     break;
                 default:
