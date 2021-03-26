@@ -2,7 +2,7 @@ const { verifyHelper } = require("../helpers/verify-helper");
 const requestMethodAction = require("../helpers/constant-helpers").REQUEST_METHODS_ACTION;
 const errors = require('../helpers/constant-helpers').ERROR_MESSAGES;
 const cuota = require('../models').cuota;
-const alumnoComision = require('../models').alumnoComision;
+const personaComision = require('../models').personaComision;
 
 module.exports = {
     create(req, res){
@@ -148,9 +148,9 @@ module.exports = {
     
     findAll(req, res){
         cuota.findAll({ 
-            include: [ {model: alumnoComision, as: 'inscripcion'} ],
+            include: [ {model: personaComision, as: 'inscripcion'} ],
             order: ['id'],
-            attributes:{ exclude: ['alumnoComisionId'] },
+            attributes:{ exclude: ['personaComisionId'] },
             raw: false
         })
         .then(cuotas => {
@@ -183,9 +183,9 @@ module.exports = {
         }
 
         cuota.findAll({ 
-            include: [ {model: alumnoComision, as: 'inscripcion'} ],
+            include: [ {model: personaComision, as: 'inscripcion'} ],
             order: ['id'],
-            attributes:{ exclude: ['alumnoComisionId'] },
+            attributes:{ exclude: ['personaComisionId'] },
             raw: false,
             where: verifyResponse.cuota
         })

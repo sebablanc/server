@@ -12,9 +12,9 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
 
-      asistencia.belongsTo(models.alumnoComision, {
+      asistencia.belongsTo(models.personaComision, {
         as: 'comision',
-        foreignKey: 'alumnoComisionId'
+        foreignKey: 'personaComisionId'
       });
     }
   };
@@ -25,10 +25,10 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true
     },
-    alumnoComisionId: {
+    personaComisionId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      field: 'alumnocomisionid'
+      field: 'personacomisionid'
     },
     fechaClase:{
       type: DataTypes.DATEONLY,

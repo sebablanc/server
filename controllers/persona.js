@@ -1,73 +1,29 @@
-const Sequelize = require('sequelize');
 const { Op } = require("sequelize");
 const persona = require('../models').persona;
 const localidad = require('../models').localidad;
 const alumno = require('../models').alumno;
-const usuario = require('../models').usuario;
 const errors = require('../helpers/constant-helpers').ERROR_MESSAGES;
+const verifyHelper = require('../helpers/verify-helper').verifyHelper;
+const personaActions = require('../helpers/constant-helpers').REQUEST_METHODS_ACTION;
 
 module.exports = {
     create(req, res){
         console.info("personaController - create - START");
 
-        let keys = req.body ? Object.keys(req.body) : [];
-
-        let errorsList = [];
-        let objectToSend = {};
-        //verifico que existan keys
-        if(keys == null || keys.length <= 0){
-            errorsList.push('La persona enviada no tiene ningún atributo para guardar.');
-        } else if(keys.length > 0 && ( req.body.nroCuenta == null || req.body.nombre == null || req.body.apellido == null || req.body.telefono == null)){
-            errorsList.push('No se envíaron alguno de los siguientes datos: número de cuenta, nombre, apellido y teléfono.');
-        }
-
-        // verifico que las keys sean las adecuadas y la info enviada correcta
-        keys.forEach(key => {
-            switch(key.toLowerCase()) {
-                case "nrocuenta":
-                    if (req.body[key] == null || req.body[key] == undefined || req.body[key].trim() == '' ){
-                        errorsList.push('El número de cuenta enviado es inválido o nulo.');
-                    } else {
-                        objectToSend[key] = req.body[key];
-                    }
-                    break;
-                case "nombre":
-                case "apellido":
-                case "telefono":
-                    if(req.body[key] == null || req.body[key] == undefined || req.body[key].trim() == '' ){
-                        errorsList.push(`El ${key.toLowerCase()} enviado es inválido o nulo.`);
-                    } else {
-                        objectToSend[key] = req.body[key];
-                    }
-                    break;
-                case "direccion":
-                case "celular":
-                case "email":
-                case "otromedio":
-                case "localidadid":
-                case "createdat":
-                case "updatedat":
-                    objectToSend[key] = req.body[key];
-                    break;
-                default:
-                    // ERROR - si existe una key distinta a las cuatro anteriores, quiere decir que es un parámetro incorrecto
-                    errorsList.push('Se enviaron datos no válidos para guardar una persona.');
-                    break;
-            }
-        });
+        let verifyResponse = verifyHelper.verifyPersona(req, personaActions.CREATE);
 
         // devuelvo mensajes de error en caso de que no se cumpla alguna condición para guardar una persona
-        if(errorsList.length > 0){
+        if(verifyResponse && verifyResponse.errors && verifyResponse.errors.length > 0){
             console.error("personaController - create - ERROR: existen errores en los parámetros enviados", req.body);
             console.info("personaController - create - END");
             return res.status(400).send({
                 exito: false,
-                messages: errorsList,
+                messages: verifyResponse.errors,
                 personas: null
             });
         }
 
-        persona.create(objectToSend, {include: [ {model: localidad, as: 'localidad'} ], attributes:{ exclude: ['localidadId'] }})
+        persona.create(verifyResponse.persona, {include: [ {model: localidad, as: 'localidad'} ], attributes:{ exclude: ['localidadId'] }})
         .then(persona =>{ 
             console.info("personaController - create - END");
             return res.status(200).send({

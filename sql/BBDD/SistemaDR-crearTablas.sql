@@ -71,6 +71,9 @@ CREATE TABLE persona(
 	email varchar(50),
 	otroMedio varchar(50),
 	localidadid smallint,
+	dni integer NOT NULL UNIQUE,
+	fechaNacimiento date,
+	foto varchar(50),
 	createdAt Date,
     updatedAt Date,
 	CONSTRAINT pk_persona PRIMARY KEY (id),
@@ -90,18 +93,6 @@ CREATE TABLE userDR(
 	CONSTRAINT fk_userPers FOREIGN KEY (personaId) REFERENCES persona(id)
 );
 
-CREATE TABLE alumno(
-	id serial NOT NULL,
-	dni integer NOT NULL UNIQUE,
-	fechaNacimiento date,
-	foto varchar(50),
-	personaId integer NOT NULL UNIQUE,
-	createdAt Date,
-    updatedAt Date,
-	CONSTRAINT pk_alumno PRIMARY KEY (id),
-	CONSTRAINT fk_persAlu FOREIGN KEY (personaId) REFERENCES persona(id)
-);
-
 CREATE TABLE comision(
 	id serial NOT NULL,
 	codComision smallint NOT NULL,
@@ -117,22 +108,22 @@ CREATE TABLE comision(
 	CONSTRAINT fk_comCurso FOREIGN KEY (cursoId) REFERENCES curso(id)
 );
 
-CREATE TABLE alumnoComision(
+CREATE TABLE personaComision(
 	id serial NOT NULL,
 	fechaInscripcion date NOT NULL DEFAULT CURRENT_DATE,
-	alumnoId smallint NOT NULL,
+	personaId smallint NOT NULL,
 	comisionId smallint NOT NULL,
 	createdAt Date,
     updatedAt Date,
-	CONSTRAINT pk_alumnoComision PRIMARY KEY (id),
-	CONSTRAINT fk_alumnoAluCom FOREIGN KEY (alumnoId) REFERENCES alumno(id),
+	CONSTRAINT pk_personaComision PRIMARY KEY (id),
+	CONSTRAINT fk_personaPersCom FOREIGN KEY (personaId) REFERENCES persona(id),
 	CONSTRAINT fk_AluComComision FOREIGN KEY (comisionId) REFERENCES comision(id)
 );
 
 
 CREATE TABLE cuota(
 	id serial NOT NULL,
-	alumnoComisionId smallint NOT NULL,
+	personaComisionId smallint NOT NULL,
 	pagado boolean DEFAULT false,
 	nroCuota smallint,
 	fechaVenc date,
@@ -140,7 +131,7 @@ CREATE TABLE cuota(
 	createdAt Date,
     updatedAt Date,
 	CONSTRAINT pk_cuota PRIMARY KEY (id),
-	CONSTRAINT fk_cuotaAluCom FOREIGN KEY (alumnoComisionId) REFERENCES alumnoComision(id),
+	CONSTRAINT fk_cuotaPersCom FOREIGN KEY (personaComisionId) REFERENCES personaComision(id),
 	CONSTRAINT positive_nroCuota CHECK (nroCuota > 0)
 );
 
@@ -151,19 +142,19 @@ CREATE TABLE inscripcionDescuento(
 	createdAt Date,
     updatedAt Date,
 	CONSTRAINT pk_inscDesc PRIMARY KEY (id),
-	CONSTRAINT fk_cuotaAluCom FOREIGN KEY (comisionId) REFERENCES alumnoComision(id),
+	CONSTRAINT fk_cuotaPersCom FOREIGN KEY (comisionId) REFERENCES personaComision(id),
 	CONSTRAINT fk_inscDescDescuento FOREIGN KEY (descuentoId) REFERENCES descuento(id)
 );
 
 CREATE TABLE asistencia(
 	id serial NOT NULL,
-	alumnoComisionId smallint NOT NULL,
+	personaComisionId smallint NOT NULL,
 	fechaClase date,
 	asiste boolean,
 	createdAt Date,
     updatedAt Date,
 	CONSTRAINT pk_asistencia PRIMARY KEY (id),
-	CONSTRAINT fk_asistAlumnoComision FOREIGN KEY (alumnocomisionId) REFERENCES alumnocomision(id)
+	CONSTRAINT fk_asistPersonaComision FOREIGN KEY (personacomisionId) REFERENCES personacomision(id)
 );
 
 CREATE TABLE personaCurso(
@@ -264,13 +255,22 @@ FOR EACH ROW EXECUTE FUNCTION func_validar_curso();
 ------------------------------- Validando persona ---------------------------------
 -----------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION func_validar_alumno() RETURNS TRIGGER AS $funcemp$
+CREATE OR REPLACE FUNCTION func_validar_persona() RETURNS TRIGGER AS $funcemp$
 BEGIN
-IF(NEW.personaId<0 OR NEW.personaId is NULL)THEN
-	RAISE EXCEPTION 'Debe seleccionar una persona.';
+IF(NEW.nroCuenta='' OR NEW.nroCuenta is NULL)THEN
+	RAISE EXCEPTION 'Debe proporcionar un numero de cuenta para la persona.';
 END IF;
-IF(NEW.dni<0 OR NEW.dni is NULL)THEN
-	RAISE EXCEPTION 'Debe proporcionar un dni.';
+IF(NEW.nombre='' OR NEW.nombre is NULL)THEN
+	RAISE EXCEPTION 'Debe proporcionar un nombre para la persona.';
+END IF;
+IF(NEW.apellido='' OR NEW.apellido is NULL)THEN
+	RAISE EXCEPTION 'Debe proporcionar un apellido para la persona.';
+END IF;
+IF(NEW.telefono='' OR NEW.telefono is NULL)THEN
+	RAISE EXCEPTION 'Debe proporcionar un teléfono para la persona.';
+END IF;
+IF(NEW.dni='' OR NEW.dni is NULL)THEN
+	RAISE EXCEPTION 'Debe proporcionar un DNI para la persona.';
 END IF;
 RETURN NEW;
 END; $funcemp$ LANGUAGE plpgsql;
@@ -294,12 +294,12 @@ BEGIN
 IF(NEW.email='' OR NEW.email is NULL)THEN
 	RAISE EXCEPTION 'Debe proporcionar un número de cuenta.';
 END IF;
-IF(NEW.pass='' OR NEW.pass is NULL)THEN
+IF(NEW.pass='' OR NEW.pass is NOT NULL)THEN
 	RAISE EXCEPTION 'Debe proporcionar una contraseña.';
 ELSIF (OLD.pass=NEW.pass) THEN
 	NEW.pass := NEW.pass;
 ELSE
-	NEW.pass := encode(digest(NEW.pass, 'sha1'), 'hex');
+	NEW.pass := encode(digest(NEW.pass, 'sha256'), 'hex');
 END IF;
 RETURN NEW;
 END; $funcemp$ LANGUAGE plpgsql;
@@ -314,30 +314,6 @@ CREATE TRIGGER verificar_carga_userdr
 BEFORE INSERT OR UPDATE ON userdr
 FOR EACH ROW EXECUTE FUNCTION fun_validar_userdr();
 
------------------------------------------------------------------------------------
-------------------------------- Validando alumno ----------------------------------
------------------------------------------------------------------------------------
-
-CREATE OR REPLACE FUNCTION func_validar_alumno() RETURNS TRIGGER AS $funcemp$
-BEGIN
-IF(NEW.personaId<0 OR NEW.personaId is NULL)THEN
-	RAISE EXCEPTION 'Debe seleccionar una persona.';
-END IF;
-IF(NEW.dni<0 OR NEW.dni is NULL)THEN
-	RAISE EXCEPTION 'Debe proporcionar un dni.';
-END IF;
-RETURN NEW;
-END; $funcemp$ LANGUAGE plpgsql;
-
--- Habilitar para PGAdmin3
--- CREATE TRIGGER verificar_carga_alumno
--- BEFORE INSERT OR UPDATE ON alumno
--- FOR EACH ROW EXECUTE PROCEDURE func_validar_alumno();
-
--- Habilitar para PGAdmin4
-CREATE TRIGGER verificar_carga_alumno
-BEFORE INSERT OR UPDATE ON alumno
-FOR EACH ROW EXECUTE FUNCTION func_validar_alumno();
 
 -----------------------------------------------------------------------------------
 ------------------------------ Validando comision ---------------------------------
@@ -362,7 +338,7 @@ BEFORE INSERT OR UPDATE ON comision
 FOR EACH ROW EXECUTE FUNCTION func_validar_comision();
 
 -----------------------------------------------------------------------------------
---------------------------- Validando alumnoComision ------------------------------
+--------------------------- Validando personaComision ------------------------------
 -----------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION func_validar_aluCom() RETURNS TRIGGER AS $funcemp$
@@ -370,8 +346,8 @@ BEGIN
 IF(NEW.fechaInscripcion is NULL)THEN
 	RAISE EXCEPTION 'Debe ingresar una fecha de inscripción.';
 END IF;
-IF(NEW.alumnoId<=0 OR NEW.alumnoId is NULL)THEN
-	RAISE EXCEPTION 'Seleccione un alumno.';
+IF(NEW.personaId<=0 OR NEW.personaId is NULL)THEN
+	RAISE EXCEPTION 'Seleccione un persona.';
 END IF;
 IF(NEW.comisionId<=0 OR NEW.comisionId is NULL)THEN
 	RAISE EXCEPTION 'Seleccione una comision.';
@@ -380,13 +356,13 @@ RETURN NEW;
 END; $funcemp$ LANGUAGE plpgsql;
 
 -- Habilitar para PGAdmin3
--- CREATE TRIGGER verificar_carga_alumnoComision
--- BEFORE INSERT OR UPDATE ON alumnocomision
+-- CREATE TRIGGER verificar_carga_personaComision
+-- BEFORE INSERT OR UPDATE ON personacomision
 -- FOR EACH ROW EXECUTE PROCEDURE func_validar_aluCom();
 
 -- Habilitar para PGAdmin4
-CREATE TRIGGER verificar_carga_alumnoComision
-BEFORE INSERT OR UPDATE ON alumnocomision
+CREATE TRIGGER verificar_carga_personaComision
+BEFORE INSERT OR UPDATE ON personacomision
 FOR EACH ROW EXECUTE FUNCTION func_validar_aluCom();
 
 -----------------------------------------------------------------------------------
@@ -395,7 +371,7 @@ FOR EACH ROW EXECUTE FUNCTION func_validar_aluCom();
 
 CREATE OR REPLACE FUNCTION func_validar_cuota() RETURNS TRIGGER AS $funcemp$
 BEGIN
-IF(NEW.alumnoComisionId<=0 OR NEW.alumnoComisionId is NULL)THEN
+IF(NEW.personaComisionId<=0 OR NEW.personaComisionId is NULL)THEN
 	RAISE EXCEPTION 'Seleccione una comision.';
 END IF;
 RETURN NEW;
@@ -443,8 +419,8 @@ FOR EACH ROW EXECUTE FUNCTION func_validar_inscdesc();
 
 CREATE OR REPLACE FUNCTION func_validar_asistencia() RETURNS TRIGGER AS $funcemp$
 BEGIN
-IF(NEW.alumnocomisionId<=0 OR NEW.alumnocomisionId is NULL)THEN
-	RAISE EXCEPTION 'Seleccione un alumno.';
+IF(NEW.personacomisionId<=0 OR NEW.personacomisionId is NULL)THEN
+	RAISE EXCEPTION 'Seleccione un persona.';
 END IF;
 RETURN NEW;
 END; $funcemp$ LANGUAGE plpgsql;

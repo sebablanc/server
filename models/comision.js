@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'cursoId'
       });
 
-      comision.hasMany(models.alumnoComision, {as: 'alumnos'});
+      comision.hasMany(models.personaComision, {as: 'alumnos'});
     }
   };
   comision.init({

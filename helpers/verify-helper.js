@@ -188,38 +188,59 @@ module.exports.verifyHelper = {
         return {errors: errorsList, curso: parsedCurso};
     },
 
-    verifyAlumno(req, alumnoAction){
-        console.log("verifyHelper - verifyAlumno - START");
+    verifyPersona(req, alumnoAction){
+        console.log("verifyHelper - verifyPersona - START");
 
         let keys = req.body ? Object.keys(req.body) : [];
         let id = req.body && req.body.id ? req.body.id : null;
         
          // creo elementos a devolver
          let errorsList = [];
-         let parsedAlumno = {};
+         let parsedPersona = {};
 
         // Verifico información principal
         if(keys == null || keys.length <= 0){
             errorsList.push('El alumno enviado no tiene ningún atributo para realizar esta acción.');
         } else if((id == null || id == undefined || id < 1) && (alumnoAction == httpRequestActions.DELETE || alumnoAction == httpRequestActions.UPDATE)){
-            console.error("verifyHelper - verifyAlumno - ERROR: No se envió id", keys);
-            console.info("verifyHelper - verifyAlumno - END");
+            console.error("verifyHelper - verifyPersona - ERROR: No se envió id", keys);
+            console.info("verifyHelper - verifyPersona - END");
             errorsList.push('No se envió un id válido.');
-        } else if(keys.length > 0 && (req.body.dni == null || req.body.personaId == null) && alumnoAction == httpRequestActions.CREATE){
-            errorsList.push('No se envíaron alguno de los siguientes campos: DNI o ID de la persona.');
+        } else if(keys.length > 0 && (req.body.nroCuenta == null || req.body.nombre == null || req.body.apellido == null || req.body.telefono == null || req.body.dni == null) && alumnoAction == httpRequestActions.CREATE){
+            errorsList.push('No se envíaron alguno de los siguientes datos: número de cuenta, nombre, apellido, DNI o teléfono.');
         }
 
         if(alumnoAction != httpRequestActions.DELETE){
             keys.forEach(key =>{
                 switch (key.toLowerCase()) {
-                    case "fechanacimiento":
-                        parsedAlumno[key] = req.body[key];
+                    case "nrocuenta":
+                        if (req.body[key] == null || req.body[key] == undefined || req.body[key].trim() == '' ){
+                            errorsList.push('El número de cuenta enviado es inválido o nulo.');
+                        } else {
+                            parsedPersona[key] = req.body[key];
+                        }
                         break;
+                    case "nombre":
+                    case "apellido":
+                    case "telefono":
+                        if(req.body[key] == null || req.body[key] == undefined || req.body[key].trim() == '' ){
+                            errorsList.push(`El ${key.toLowerCase()} enviado es inválido o nulo.`);
+                        } else {
+                            parsedPersona[key] = req.body[key];
+                        }
+                        break;
+                    case "direccion":
+                    case "celular":
+                    case "email":
+                    case "otromedio":
+                    case "localidadid":
+                    case "createdat":
+                    case "updatedat":
+                    case "fechanacimiento":
                     case "dni":
                     case "id":
                     case "foto":
                     case "personaid":
-                        parsedAlumno[key] = req.body[key];
+                        parsedPersona[key] = req.body[key];
                         break;
                     default:
                         // ERROR - si existe una key distinta a las cuatro anteriores, quiere decir que es un parámetro incorrecto
@@ -228,11 +249,11 @@ module.exports.verifyHelper = {
                 }
             })
         } else {
-            parsedAlumno.id = id;
+            parsedPersona.id = id;
         }
 
-        console.log("verifyHelper - verifyAlumno - END");
-        return {errors: errorsList, alumno: parsedAlumno};
+        console.log("verifyHelper - verifyPersona - END");
+        return {errors: errorsList, persona: parsedPersona};
     },
 
     verifyComision(req, comisionAction){
@@ -284,35 +305,35 @@ module.exports.verifyHelper = {
         return {errors: errorsList, comision: parsedComision};
     },
 
-    verifyAlumnoComision(req, alumnoComisionAction){
-        console.log("verifyHelper - verifyAlumnoComision - START");
+    verifyPersonaComision(req, personaComisionAction){
+        console.log("verifyHelper - verifyPersonaComision - START");
         
         let keys = req.body ? Object.keys(req.body) : [];
         let id = req.body && req.body.id ? req.body.id : null;
 
         // creo elementos a devolver
         let errorsList = [];
-        let parsedAlumnoComision = {};
+        let parsedPersonaComision = {};
 
         // Verifico información principal
         if(keys == null || keys.length <= 0){
             errorsList.push(`La inscripción no posee datos para realizar la acción.`);
-        } else if((id == null || id == undefined || id < 1) && (alumnoComisionAction == httpRequestActions.DELETE || alumnoComisionAction == httpRequestActions.UPDATE)){
-            console.error("verifyHelper - verifyAlumnoComision - ERROR: No se envió id", keys);
-            console.info("verifyHelper - verifyAlumnoComision - END");
+        } else if((id == null || id == undefined || id < 1) && (personaComisionAction == httpRequestActions.DELETE || personaComisionAction == httpRequestActions.UPDATE)){
+            console.error("verifyHelper - verifyPersonaComision - ERROR: No se envió id", keys);
+            console.info("verifyHelper - verifyPersonaComision - END");
             errorsList.push('No se envió un id válido.');
-        } else if(keys.length > 0 && (req.body.alumnoId == null || req.body.comisionId == null) && alumnoComisionAction == httpRequestActions.CREATE){
+        } else if(keys.length > 0 && (req.body.alumnoId == null || req.body.comisionId == null) && personaComisionAction == httpRequestActions.CREATE){
             errorsList.push('No se envíaron alguno de los siguientes campos: ID de la persona o de la comisión.');
         }
 
-        if(alumnoComisionAction != httpRequestActions.DELETE){
+        if(personaComisionAction != httpRequestActions.DELETE){
             keys.forEach(key =>{
                 switch (key.toLowerCase()) {
                     case "id":
                     case "fechainscripcion":
                     case "alumnoid":
                     case "comisionid":
-                        parsedAlumnoComision[key] = req.body[key];
+                        parsedPersonaComision[key] = req.body[key];
                         break;
                     default:
                         // ERROR - si existe una key distinta a las cuatro anteriores, quiere decir que es un parámetro incorrecto
@@ -321,11 +342,11 @@ module.exports.verifyHelper = {
                 }
             })
         } else {
-            parsedAlumnoComision.id = id;
+            parsedPersonaComision.id = id;
         }
 
-        console.log("verifyHelper - verifyAlumnoComision - END");
-        return {errors: errorsList, alumnoComision: parsedAlumnoComision};
+        console.log("verifyHelper - verifyPersonaComision - END");
+        return {errors: errorsList, personaComision: parsedPersonaComision};
     },
 
     verifyCuota(req, cuotaAction){

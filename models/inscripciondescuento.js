@@ -12,9 +12,9 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
 
-      inscripcionDescuento.belongsTo(models.alumnoComision, {
+      inscripcionDescuento.belongsTo(models.personaComision, {
         as: 'inscripcion',
-        foreignKey: 'alumnoComisionId'
+        foreignKey: 'personaComisionId'
       });
       
       inscripcionDescuento.belongsTo(models.descuento, {
@@ -30,10 +30,10 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true
     },
-    alumnoComisionId:  {
+    personaComisionId:  {
       type: DataTypes.INTEGER,
       allowNull: false,
-      field: 'alumnocomisionid'
+      field: 'personacomisionid'
     },
     descuentoId:{
       type: DataTypes.INTEGER,

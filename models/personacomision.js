@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class alumnoComision extends Model {
+  class personaComision extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,24 +11,24 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      alumnoComision.belongsTo(models.alumno, {
-        as: 'alumno', 
-        foreignKey: 'alumnoId'
+      personaComision.belongsTo(models.persona, {
+        as: 'persona', 
+        foreignKey: 'personaId'
       });
       
-      alumnoComision.belongsTo(models.comision, {
+      personaComision.belongsTo(models.comision, {
         as: 'comision',
         foreignKey: 'comisionId'
       });
 
-      alumnoComision.hasMany(models.cuota,{as: 'cuotas'});
+      personaComision.hasMany(models.cuota,{as: 'cuotas'});
 
-      alumnoComision.hasMany(models.inscripcionDescuento, {as: 'descuentos'});
+      personaComision.hasMany(models.inscripcionDescuento, {as: 'descuentos'});
       
-      alumnoComision.hasMany(models.asistencia, {as: 'asistencias'});
+      personaComision.hasMany(models.asistencia, {as: 'asistencias'});
     }
   };
-  alumnoComision.init({
+  personaComision.init({
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -43,7 +43,7 @@ module.exports = (sequelize, DataTypes) => {
     alumnoId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      field: 'alumnoid'
+      field: 'personaid'
     },
     comisionId:  {
       type: DataTypes.INTEGER,
@@ -60,8 +60,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {
     sequelize,
-    modelName: 'alumnoComision',
-    tableName: 'alumnocomision'
+    modelName: 'personaComision',
+    tableName: 'personacomision'
   });
-  return alumnoComision;
+  return personaComision;
 };

@@ -17,8 +17,6 @@ module.exports = (sequelize, DataTypes) => {
       });
       persona.hasMany(models.user, {as: 'usuarios'});
 
-      persona.hasOne(models.alumno);
-
       persona.hasMany(models.personaCurso, {as: 'observaciones'});
     }
   };
@@ -58,10 +56,20 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       field: 'localidadid'
     },
+    dni: { 
+      type:DataTypes.STRING,
+      allowNull: false,
+      unique: true
+    },
+    fechaNacimiento: { 
+      type:DataTypes.DATE,
+      field: 'fechanacimiento'
+    },
     createdAt: {
       type: DataTypes.DATE,
       field: 'createdat'
     },
+    foto: DataTypes.STRING,
     updatedAt: {
       type: DataTypes.DATE,
       field: 'updatedat'
