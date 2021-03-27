@@ -30,7 +30,7 @@ module.exports.verifyHelper = {
                     case "email":
                         const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                         let testResult = req.body[key] ? re.test(String(req.body[key]).toLowerCase()) : false;
-                        if(testResult && (userAction == httpRequestActions.CREATE || userAction == httpRequestActions.FIND || userAction == httpRequestActions.LOGIN)){
+                        if(testResult && (userAction == httpRequestActions.CREATE || userAction == httpRequestActions.UPDATE || userAction == httpRequestActions.FIND || userAction == httpRequestActions.LOGIN)){
                             parsedUser[key] = req.body[key];
                         } else if(testResult && userAction != httpRequestActions.CREATE){
                             errorsList.push(`No es posible cambiar el mail, si lo desea, borre el usuario y cree uno nuevo con otro email.`);
@@ -55,6 +55,8 @@ module.exports.verifyHelper = {
                     case "id":
                     case "activated":
                     case "personaid":
+                    case "updatedat":
+                    case "createdat":
                         parsedUser[key] = req.body[key];
                         break;
                     default:
@@ -239,7 +241,6 @@ module.exports.verifyHelper = {
                     case "dni":
                     case "id":
                     case "foto":
-                    case "personaid":
                         parsedPersona[key] = req.body[key];
                         break;
                     default:

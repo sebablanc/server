@@ -45,60 +45,12 @@ module.exports = {
 
     update(req, res){
         console.info("personaController - update - START");
-        let keys = req.body ? Object.keys(req.body) : [];
-        let id = req.body && req.body.id ? req.body.id : null;
 
-        let errorsList = [];
-        let objectToSend = {};
+        let verifyResponse = verifyHelper.verifyPersona(req, personaActions.UPDATE);
 
-        //verifico que existan keys
-        if(keys == null || keys.length <= 0){
-            errorsList.push('La persona enviada no tiene ningún atributo para guardar.');
-        } else if(id == null || id == undefined || id < 1){
-            console.error("personaController - update - ERROR: No se envió id", keys);
+        if(verifyResponse && verifyResponse.errors && verifyResponse.errors.length > 0){
+            console.error("personaController - update - ERROR: existen errores en los parámetros enviados", req.body);
             console.info("personaController - update - END");
-            errorsList.push('No se envió un id válido.');
-        }
-
-        // verifico que las keys sean las adecuadas y la info enviada correcta
-        keys.forEach(key => {
-            switch(key.toLowerCase()) {
-                case "nrocuenta":
-                    if (req.body[key] == null || req.body[key] == undefined || req.body[key].trim() == '' ){
-                        errorsList.push('El número de cuenta enviado es inválido o nulo.');
-                    } else {
-                        objectToSend[key] = req.body[key];
-                    }
-                    break;
-                case "nombre":
-                case "apellido":
-                case "telefono":
-                    if(req.body[key] == null || req.body[key] == undefined || req.body[key].trim() == '' ){
-                        errorsList.push(`El ${key.toLowerCase()} enviado es inválido o nulo.`);
-                    } else {
-                        objectToSend[key] = req.body[key];
-                    }
-                    break;
-                case "id":
-                case "direccion":
-                case "celular":
-                case "email":
-                case "otromedio":
-                case "localidadid":
-                    objectToSend[key] = req.body[key];
-                    break;
-                case "localidad":
-                    break;
-                default:
-                    // ERROR - si existe una key distinta a las cuatro anteriores, quiere decir que es un parámetro incorrecto
-                    errorsList.push('Se enviaron datos no válidos para guardar una persona.');
-                    break;
-            }
-        });
-
-        if(errorsList.length > 0){
-            console.error("personaController - create - ERROR: existen errores en los parámetros enviados", req.body);
-            console.info("personaController - create - END");
             return res.status(400).send({
                 exito: false,
                 messages: errorsList,
@@ -106,7 +58,7 @@ module.exports = {
             });
         }
 
-        persona.update(objectToSend,{ where: {id: id}})
+        persona.update(verifyResponse.persona,{ where: {id: verifyResponse.persona.id}})
         .then(num => {
             let object = {};
             let statusCode = 0;
@@ -214,64 +166,24 @@ module.exports = {
         console.info("personaController - find - START");
 
         // obtengo array de keys de parámetros enviados
-        let keys = Object.keys(req.body);
+        let verifyResponse = verifyHelper.verifyPersona(req, personaActions.FIND);
 
-        //verifico que existan keys
-        if(keys.length <= 0){
-            console.error("personaController - find - ERROR: No se envió ningún parámetro", keys);
+        // devuelvo mensajes de error en caso de que no se cumpla alguna condición para guardar una persona
+        if(verifyResponse && verifyResponse.errors && verifyResponse.errors.length > 0){
+            console.error("personaController - find - ERROR: existen errores en los parámetros enviados", req.body);
             console.info("personaController - find - END");
             return res.status(400).send({
                 exito: false,
-                messages: ['No se enviaron parámetros por los cuales realizar la búsqueda de personas.'],
-                personas: null
-            });
-        }
-
-        // indica si se envió un parámetro inválido
-        let keyError = false;
-
-        // objeto que se utiliza para filtrar en la base de datos
-        let filters = {};
-
-        //se recorren las keys para enviarlas como parámetros del where en la query
-        keys.forEach(key => {
-            switch(key.toLowerCase()) {
-                case "id":
-                case "localidadid":
-                    filters[key] = req.body[key];
-                    break;
-                case "nrocuenta":
-                case "nombre":
-                case "apellido":
-                    if(req.body[key]){
-                        filters[key] = { [Op.like]: '%'+req.body[key]+'%' };
-                    } else {
-                        filters[key] = req.body[key];
-                    }
-                    break;
-                default:
-                    // ERROR - si existe una key distinta a las cuatro anteriores, quiere decir que es un parámetro incorrecto
-                    keyError = true;
-                    break;
-
-            }
-        });
-
-        if(keyError){
-            console.error("personaController - find - ERROR: Se envió un parámetro incorrecto", req.body);
-            console.info("personaController - find - END");
-            return res.status(400).send({
-                exito: false,
-                messages: ['Se enviaron parámetros por los cuales no se pueden buscar personas.'],
+                messages: verifyResponse.errors,
                 personas: null
             });
         }
 
         persona.findAll({ 
-            include: [ {model: localidad, as: 'localidad'}, {model: alumno, as: 'alumno'} ],
+            include: [ {model: localidad, as: 'localidad'} ],
             attributes:{ exclude: ['localidadId'] },
             raw: false,
-            where: filters
+            where: verifyResponse.persona
         })
         .then(personas => {
             console.info("personaController - find - END");
