@@ -144,7 +144,8 @@ module.exports = {
 
     findAll(req, res){
         persona.findAll({ 
-            include: [ {model: localidad, as: 'localidad'}, {model: alumno, as: 'alumno'} ],
+            include: [ {model: localidad, as: 'localidad'}],
+            order: ['id'],
             attributes:{ exclude: ['localidadId'] },
             raw: false
         })
