@@ -53,7 +53,9 @@ CREATE TABLE curso(
 	nombre varchar(30) NOT NULL UNIQUE,
 	imagen varchar(60),
 	programa varchar(60),
-	valor float,
+	valor float NOT NULL,
+	descripcion varchar(255),
+	categoria varchar(10) NOT NULL,
 	createdAt Date,
     updatedAt Date,
 	CONSTRAINT pk_curso PRIMARY KEY (id),
@@ -294,7 +296,7 @@ BEGIN
 IF(NEW.email='' OR NEW.email is NULL)THEN
 	RAISE EXCEPTION 'Debe proporcionar un número de cuenta.';
 END IF;
-IF(NEW.pass='' OR NEW.pass is NOT NULL)THEN
+IF(NEW.pass='' OR NEW.pass is NULL)THEN
 	RAISE EXCEPTION 'Debe proporcionar una contraseña.';
 ELSIF (OLD.pass=NEW.pass) THEN
 	NEW.pass := NEW.pass;

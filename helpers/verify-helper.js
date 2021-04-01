@@ -114,6 +114,8 @@ module.exports.verifyHelper = {
                         break;
                     case "id":
                     case "seleccion":
+                    case "updatedat":
+                    case "createdat":
                         parsedDescuento[key] = req.body[key];
                         break;
                     default:
@@ -173,6 +175,10 @@ module.exports.verifyHelper = {
                     case "id":
                     case "imagen":
                     case "programa":
+                    case "descripcion":
+                    case "categoria":
+                    case "updatedat":
+                    case "createdat":
                         parsedCurso[key] = req.body[key];
                         break;
                     default:

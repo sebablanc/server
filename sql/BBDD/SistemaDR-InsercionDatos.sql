@@ -8,7 +8,7 @@ INSERT INTO localidad (codpostal, ciudad, provincia) VALUES (3260, 'Concepción 
 INSERT INTO localidad (codpostal, ciudad, provincia) VALUES (3280, 'Colón', 'Entre Ríos');
 INSERT INTO localidad (codpostal, ciudad, provincia) VALUES (3265, 'Villa Elisa', 'Entre Ríos');
 INSERT INTO localidad (codpostal, ciudad, provincia) VALUES (3283, 'San José', 'Entre Ríos');
-INSERT INTO localidad (codpostal, ciudad, provincia) VALUES (3264, 'Pronunciamiento', 'Entre Ríos');
+INSERT INTO localidad (codpostal, ciudad, provincia) VALUES (3263, 'Pronunciamiento', 'Entre Ríos');
 INSERT INTO localidad (codpostal, ciudad, provincia) VALUES (3262, 'San Justo', 'Entre Ríos');
 INSERT INTO localidad (codpostal, ciudad, provincia) VALUES (3261, 'Colonia Elía', 'Entre Ríos');
 INSERT INTO localidad (codpostal, ciudad, provincia) VALUES (2820, 'Gualeguaychú', 'Entre Ríos');

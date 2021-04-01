@@ -33,6 +33,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.FLOAT,
       allowNull: false
     },
+    categoria: { 
+      type:DataTypes.STRING,
+      allowNull: false
+    },
+    descripcion: DataTypes.STRING,
     createdAt: {
       type: DataTypes.DATE,
       field: 'createdat'
