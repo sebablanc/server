@@ -97,7 +97,6 @@ CREATE TABLE userDR(
 
 CREATE TABLE comision(
 	id serial NOT NULL,
-	codComision smallint NOT NULL,
 	cursoId smallint NOT NULL,
 	dias varchar(20),
 	horaDesde time,

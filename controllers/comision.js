@@ -20,7 +20,7 @@ module.exports = {
                 comisiones: null
             });
         }
-
+        
         comision.create(verifyResponse.comision)
         .then(comision => {
             console.info("comisionController - create - END");

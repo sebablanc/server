@@ -289,13 +289,19 @@ module.exports.verifyHelper = {
                 switch (key.toLowerCase()) {
                     case "horadesde":
                     case "horahasta":
-                        parsedComision[key] = Date.parse(req.body[key]+"+0000");
+                        let hourBody = req.body[key].split(':');
+                        var today = new Date();
+                        var parsedDay = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate(), hourBody[0], hourBody[1], 0));
+                        parsedComision[key] = parsedDay;
                         break;
                     case "id":
+                        break;
                     case "cursoid":
                     case "dias":
                     case "fechainicio":
                     case "fechafin":
+                    case "createdat":
+                    case "updatedat":
                         parsedComision[key] = req.body[key];
                         break;
                     default:
