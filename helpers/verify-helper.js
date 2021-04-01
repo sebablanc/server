@@ -295,7 +295,6 @@ module.exports.verifyHelper = {
                         parsedComision[key] = parsedDay;
                         break;
                     case "id":
-                        break;
                     case "cursoid":
                     case "dias":
                     case "fechainicio":
