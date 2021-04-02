@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
       field: 'fechainscripcion',
       defaultValue: sequelize.literal("(now() at time zone 'utc+3')")
     },
-    alumnoId: {
+    personaId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       field: 'personaid'

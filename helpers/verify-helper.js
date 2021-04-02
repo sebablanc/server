@@ -334,7 +334,7 @@ module.exports.verifyHelper = {
             console.error("verifyHelper - verifyPersonaComision - ERROR: No se envió id", keys);
             console.info("verifyHelper - verifyPersonaComision - END");
             errorsList.push('No se envió un id válido.');
-        } else if(keys.length > 0 && (req.body.alumnoId == null || req.body.comisionId == null) && personaComisionAction == httpRequestActions.CREATE){
+        } else if(keys.length > 0 && (req.body.personaId == null || req.body.comisionId == null) && personaComisionAction == httpRequestActions.CREATE){
             errorsList.push('No se envíaron alguno de los siguientes campos: ID de la persona o de la comisión.');
         }
 
@@ -343,7 +343,7 @@ module.exports.verifyHelper = {
                 switch (key.toLowerCase()) {
                     case "id":
                     case "fechainscripcion":
-                    case "alumnoid":
+                    case "personaid":
                     case "comisionid":
                     case "createdat":
                     case "updatedat":
