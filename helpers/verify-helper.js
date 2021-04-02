@@ -345,6 +345,8 @@ module.exports.verifyHelper = {
                     case "fechainscripcion":
                     case "alumnoid":
                     case "comisionid":
+                    case "createdat":
+                    case "updatedat":
                         parsedPersonaComision[key] = req.body[key];
                         break;
                     default:
