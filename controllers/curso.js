@@ -105,7 +105,7 @@ module.exports = {
             return res.status(400).send({
                 exito: false,
                 messages: verifyResponse.errors,
-                usuarios: null
+                cursos: null
             });
         }
 
