@@ -284,7 +284,7 @@ END; $funcemp$ LANGUAGE plpgsql;
 -- Habilitar para PGAdmin4
 CREATE TRIGGER verificar_carga_persona
 BEFORE INSERT OR UPDATE ON persona
-FOR EACH ROW EXECUTE FUNCTION func_validar_pers();
+FOR EACH ROW EXECUTE FUNCTION func_validar_persona();
 
 -----------------------------------------------------------------------------------
 ------------------------------- Validando userDR ---------------------------------
@@ -468,7 +468,7 @@ FOR EACH ROW EXECUTE FUNCTION func_validar_persCurso();
 ------------------------------ Creación de usuarios -------------------------------
 -----------------------------------------------------------------------------------
 
-CREATE USER administrador PASSWORD 'pswAdmin2018';
+CREATE USER administrador PASSWORD 'admin';
 GRANT ALL PRIVILEGES ON DATABASE SistemaDR TO administrador;
 
 COMMIT;
