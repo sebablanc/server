@@ -88,7 +88,7 @@ CREATE TABLE userDR(
 	pass varchar(255) NOT NULL,
 	activated boolean DEFAULT false,
 	personaId smallint,
-	tipo varchar(13) DEFAULT 'Usuario',
+	tipo varchar(13) DEFAULT 'USER',
 	createdAt Date,
     updatedAt Date,
 	CONSTRAINT pk_user PRIMARY KEY (id),

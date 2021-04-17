@@ -16,7 +16,7 @@ RETURNS SETOF USERDRLOGIN
 AS $$
 	SELECT *
 	FROM userdr udr
-	WHERE udr.email=email AND udr.pass=encode(digest(passSended, 'sha256'), 'hex')
+	WHERE udr.email=email AND udr.pass= encode(digest(passSended, 'sha256'), 'hex')
 $$ LANGUAGE SQL;
 
 --------------------------------------------------------------------------

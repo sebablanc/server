@@ -168,8 +168,9 @@ module.exports = {
             });
         }
         
-        db.sequelize.query(`SELECT * FROM loginUser(:email, :pass)`, {replacements: { email: email, pass: pass }, type: QueryTypes.SELECT})
+        db.sequelize.query(`SELECT * FROM loginuser(:email, :pass)`, {replacements: { email: email, pass: pass }, type: QueryTypes.SELECT})
         .then(async usuarios => {
+            console.log(usuarios);
             let personaEncontrada = null;
             let exito = false;
             let messages = [];
