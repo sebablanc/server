@@ -270,7 +270,7 @@ END IF;
 IF(NEW.telefono='' OR NEW.telefono is NULL)THEN
 	RAISE EXCEPTION 'Debe proporcionar un teléfono para la persona.';
 END IF;
-IF(NEW.dni='' OR NEW.dni is NULL)THEN
+IF(NEW.dni<=0 OR NEW.dni is NULL)THEN
 	RAISE EXCEPTION 'Debe proporcionar un DNI para la persona.';
 END IF;
 RETURN NEW;

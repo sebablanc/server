@@ -33,7 +33,7 @@ module.exports = {
             });
         })
         .catch((error) => {
-            console.error("personaController - create - ERROR: al intentar guardar la persona", error.original.code);
+            console.error("personaController - create - ERROR: al intentar guardar la persona", error);
             console.info("personaController - create - END");
             return res.status(404).send({
                 exito: false,
