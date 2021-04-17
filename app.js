@@ -32,6 +32,7 @@ require('./routes/cuotasRoutes')(app);
 require('./routes/inscripcionDescuentoRoutes')(app);
 require('./routes/asistenciaRoutes')(app);
 require('./routes/personaCursoRoutes')(app);
+require('./routes/novedadRoutes')(app);
 
 // seteando puerto
 const port = parseInt(process.env.PORT, 10) || 8000;

@@ -540,5 +540,50 @@ module.exports.verifyHelper = {
 
         console.log("verifyHelper - verifyPersonaCurso - END");
         return {errors: errorsList, personaCurso: parsedPersonaCurso};
-    }
+    },
+
+    verifyNovedad(req, novedadAction){
+        console.log("verifyHelper - verifyNovedad - START");
+
+        let keys = req.body ? Object.keys(req.body) : [];
+        let id = req.body && req.body.id ? req.body.id : null;
+        
+         // creo elementos a devolver
+         let errorsList = [];
+         let parsedNovedad = {};
+
+        // Verifico información principal
+        if(keys == null || keys.length <= 0){
+            errorsList.push('La novedad enviada no tiene ningún atributo para realizar esta acción.');
+        } else if((id == null || id == undefined || id < 1) && (novedadAction == httpRequestActions.DELETE || novedadAction == httpRequestActions.UPDATE)){
+            console.error("verifyHelper - verifyNovedad - ERROR: No se envió id", keys);
+            console.info("verifyHelper - verifyNovedad - END");
+            errorsList.push('No se envió un id válido.');
+        } else if(keys.length > 0 && (req.body.title == null || req.body.messageNovedad == null) && novedadAction == httpRequestActions.CREATE){
+            errorsList.push('No se envíaron alguno de los siguientes datos: título o mensaje de la novedad.');
+        }
+
+        if(novedadAction != httpRequestActions.DELETE){
+            keys.forEach(key =>{
+                switch (key.toLowerCase()) {
+                    case "id":
+                    case "title":
+                    case "messagenovedad":
+                    case "createdat":
+                    case "updatedat":
+                        parsedNovedad[key] = req.body[key];
+                        break;
+                    default:
+                        // ERROR - si existe una key distinta a las cuatro anteriores, quiere decir que es un parámetro incorrecto
+                        errorsList.push('Se enviaron datos no válidos para guardar realizar esta acción en una persona.');
+                        break;
+                }
+            })
+        } else {
+            parsedNovedad.id = id;
+        }
+
+        console.log("verifyHelper - verifyNovedad - END");
+        return {errors: errorsList, novedad: parsedNovedad};
+    },
 }

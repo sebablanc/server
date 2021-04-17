@@ -172,6 +172,15 @@ CREATE TABLE personaCurso(
 	CONSTRAINT fk_persAlu FOREIGN KEY (personaId) REFERENCES persona(id)
 );
 
+CREATE TABLE novedad(
+	id serial NOT NULL,
+	title varchar(255) NOT NULL,
+	messageNovedad varchar(255) NOT NULL,
+	createdAt Date,
+    updatedAt Date,
+	CONSTRAINT pk_novedad PRIMARY KEY (id)
+);
+
 -----------------------------------------------------------------------------------
 ----------------------------- Creación de controles -------------------------------
 -----------------------------------------------------------------------------------
@@ -463,6 +472,31 @@ END; $funcemp$ LANGUAGE plpgsql;
 CREATE TRIGGER verificar_carga_personaCurso
 BEFORE INSERT OR UPDATE ON personaCurso
 FOR EACH ROW EXECUTE FUNCTION func_validar_persCurso();
+
+-----------------------------------------------------------------------------------
+------------------------------ Validando novedad --------------------------------
+-----------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION func_validar_novedad() RETURNS TRIGGER AS $funcemp$
+BEGIN
+IF(NEW.title='' OR NEW.title IS NULL)THEN
+	RAISE EXCEPTION 'Debe rellenar el campo título.';
+END IF;
+IF(NEW.messageNovedad='' OR NEW.messageNovedad IS NULL)THEN
+	RAISE EXCEPTION 'Debe rellenar el campo mensaje.';
+END IF;
+RETURN NEW;
+END; $funcemp$ LANGUAGE plpgsql;
+
+-- Habilitar para PGAdmin3
+--CREATE TRIGGER verificar_carga_novedad
+--BEFORE INSERT OR UPDATE ON novedad
+--FOR EACH ROW EXECUTE PROCEDURE func_validar_novedad();
+
+-- Habilitar para PGAdmin4
+CREATE TRIGGER verificar_carga_novedad
+BEFORE INSERT OR UPDATE ON novedad
+FOR EACH ROW EXECUTE FUNCTION func_validar_novedad();
 
 -----------------------------------------------------------------------------------
 ------------------------------ Creación de usuarios -------------------------------
