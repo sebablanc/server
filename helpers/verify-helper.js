@@ -586,4 +586,53 @@ module.exports.verifyHelper = {
         console.log("verifyHelper - verifyNovedad - END");
         return {errors: errorsList, novedad: parsedNovedad};
     },
+
+    verifyPremio(req, premioAction){
+        console.log("verifyHelper - verifyPremio - START");
+
+        let keys = req.body ? Object.keys(req.body) : [];
+        let id = req.body && req.body.id ? req.body.id : null;
+        
+         // creo elementos a devolver
+         let errorsList = [];
+         let parsedPremio = {};
+
+        // Verifico información principal
+        if(keys == null || keys.length <= 0){
+            errorsList.push('El sorteo enviado no tiene ningún atributo para realizar esta acción.');
+        } else if((id == null || id == undefined || id < 1) && (premioAction == httpRequestActions.DELETE || premioAction == httpRequestActions.UPDATE)){
+            console.error("verifyHelper - verifyPremio - ERROR: No se envió id", keys);
+            console.info("verifyHelper - verifyPremio - END");
+            errorsList.push('No se envió un id válido.');
+        } else if(keys.length > 0 && (req.body.fechaSorteo == null || req.body.numeroCupon == null || req.body.alumnoFavorecido == null || req.body.alumnoExtractor == null || req.body.detalleExtraccion == null || req.body.tipo == null) && premioAction == httpRequestActions.CREATE){
+            errorsList.push('No se envíaron alguno de los datos requeridos.');
+        }
+
+        if(premioAction != httpRequestActions.DELETE){
+            keys.forEach(key =>{
+                switch (key.toLowerCase()) {
+                    case "id":
+                    case "fechasorteo":
+                    case "numerocupon":
+                    case "alumnofavorecido":
+                    case "alumnoextractor":
+                    case "detalleextraccion":
+                    case "tipo":
+                    case "createdat":
+                    case "updatedat":
+                        parsedPremio[key] = req.body[key];
+                        break;
+                    default:
+                        // ERROR - si existe una key distinta a las cuatro anteriores, quiere decir que es un parámetro incorrecto
+                        errorsList.push('Se enviaron datos no válidos para realizar esta acción.');
+                        break;
+                }
+            })
+        } else {
+            parsedPremio.id = id;
+        }
+
+        console.log("verifyHelper - verifyPremio - END");
+        return {errors: errorsList, premio: parsedPremio};
+    },
 }

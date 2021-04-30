@@ -181,6 +181,19 @@ CREATE TABLE novedad(
 	CONSTRAINT pk_novedad PRIMARY KEY (id)
 );
 
+CREATE TABLE premio(
+	id serial NOT NULL,
+	fechaSorteo Date NOT NULL,
+	numeroCupon number NOT NULL,
+	alumnoFavorecido varchar(255) NOT NULL,
+	alumnoExtractor varchar(255) NOT NULL,
+	detalleExtraccion varchar(255) NOT NULL,
+	tipo varchar(12) NOT NULL,
+	createdAt Date,
+    updatedAt Date,
+	CONSTRAINT pk_premio PRIMARY KEY (id)
+);
+
 -----------------------------------------------------------------------------------
 ----------------------------- Creación de controles -------------------------------
 -----------------------------------------------------------------------------------
