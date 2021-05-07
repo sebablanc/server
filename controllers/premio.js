@@ -40,4 +40,23 @@ module.exports = {
             });
         });
     },
+
+    findAll(req, res){
+        premio.findAll({
+            order: ['id'],
+            raw: false,
+        })
+        .then(premios => {
+            return res.status(200).send({
+                exito: true,
+                messages: ['Lista de premios encontrada.'],
+                premios: premios
+            })
+        })
+        .catch(error => res.status(404).send({
+            exito: false,
+            messages: ['Error al intentar obtener lista de premios', error],
+            premios: null
+        }))
+    },
 }
