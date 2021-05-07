@@ -111,4 +111,55 @@ module.exports = {
             });
         });
     },
+    delete(req, res){
+        console.info("premioController - delete - START");
+        
+        let verifyResponse = verifyHelper.verifyPremio(req, requestMethodAction.DELETE);
+
+        if(verifyResponse && verifyResponse.errors && verifyResponse.errors.length > 0){
+            console.error("premioController - delete - ERROR: existen errores en los parámetros enviados", req.body);
+            console.info("premioController - delete - END");
+            return res.status(400).send({
+                exito: false,
+                messages: verifyResponse.errors,
+                premios: null
+            });
+        }
+
+        premio.destroy({
+            where: {id: verifyResponse.premio.id}
+        }).then(num => {
+            let objectToReturn = {};
+            let statusCode = 0;
+            if(num){
+                console.info("premioController - delete - END");
+                objectToReturn = {
+                    exito: true,
+                    messages: ['El premio ha sido eliminado correctamente.'],
+                    premios: null
+                };
+                statusCode = 200;
+            } else {
+                console.error("premioController - delete - ERROR: No se pudo eliminar el premio");
+                console.info("premioController - delete - END");
+                objectToReturn = {
+                    exito: false,
+                    messages: [`El premio con id ${id} no existe en el sistema.`],
+                    premios: null
+                };
+                statusCode = 202;
+            }
+
+            return res.status(statusCode).send(objectToReturn);
+        })
+        .catch(error => {
+            console.error("premioController - delete - ERROR: No se pudo eliminar el premio");
+            console.info("premioController - delete - END");
+            return res.status(500).send({
+                    exito: false,
+                    messages: ['Error al intentar eliminar el premio.'],
+                    premios: null
+              });
+        })
+    }
 }
