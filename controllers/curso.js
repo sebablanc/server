@@ -46,7 +46,6 @@ module.exports = {
 
     update(req, res){
         console.info("cursoController - update - START");
-
         let verifyResponse = verifyHelper.verifyCurso(req, requestMethodAction.UPDATE);
         // devuelvo mensajes de error en caso de que no se cumpla alguna condición para guardar un curso
         if(verifyResponse && verifyResponse.errors && verifyResponse.errors.length > 0){

@@ -6,7 +6,6 @@ const fs = require('fs');
 module.exports.imageHelper = {
     fotoTreatment(foto, imageName, folder){
         var extension = '';
-        console.log(foto);
         if(foto.includes('png')){
             extension = 'png';
             var base64Data = foto.replace(/^data:image\/png;base64,/, "");

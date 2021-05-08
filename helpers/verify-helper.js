@@ -172,8 +172,8 @@ module.exports.verifyHelper = {
                             parsedCurso[key] = req.body[key];
                         }
                         break;
-                    case "id":
                     case "imagen":
+                    case "id":
                     case "programa":
                     case "descripcion":
                     case "categoria":
