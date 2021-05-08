@@ -5,7 +5,6 @@ const errors = require('../helpers/constant-helpers').ERROR_MESSAGES;
 const verifyHelper = require('../helpers/verify-helper').verifyHelper;
 const imageHelper = require('../helpers/image-helper').imageHelper;
 const personaActions = require('../helpers/constant-helpers').REQUEST_METHODS_ACTION;
-const fs = require('fs');
 
 module.exports = {
     create(req, res){

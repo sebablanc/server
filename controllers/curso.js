@@ -3,6 +3,7 @@ const comision = require('../models').comision;
 const { verifyHelper } = require("../helpers/verify-helper");
 const requestMethodAction = require("../helpers/constant-helpers").REQUEST_METHODS_ACTION;
 const errors = require('../helpers/constant-helpers').ERROR_MESSAGES;
+const imageHelper = require('../helpers/image-helper').imageHelper;
 
 module.exports = {
 
@@ -58,6 +59,8 @@ module.exports = {
             });
         }
 
+        let nombreImagen = imageHelper.fotoTreatment(req.body.imagen, "cursoId_"+req.body.id,"images/curso/");
+        verifyResponse.curso.imagen = nombreImagen;
         curso.update(verifyResponse.curso,{where: {id: verifyResponse.curso.id}})
         .then(num => {
             let object = {};
