@@ -1,10 +1,11 @@
 const { Op } = require("sequelize");
 const persona = require('../models').persona;
 const localidad = require('../models').localidad;
-const alumno = require('../models').alumno;
 const errors = require('../helpers/constant-helpers').ERROR_MESSAGES;
 const verifyHelper = require('../helpers/verify-helper').verifyHelper;
+const imageHelper = require('../helpers/image-helper').imageHelper;
 const personaActions = require('../helpers/constant-helpers').REQUEST_METHODS_ACTION;
+const fs = require('fs');
 
 module.exports = {
     create(req, res){
@@ -23,6 +24,8 @@ module.exports = {
             });
         }
 
+        let nombreFoto = imageHelper.fotoTreatment(req.body.foto, "personaNroCuenta_"+req.body.nroCuenta,"images/user/");
+        verifyResponse.persona.foto = nombreFoto;
         persona.create(verifyResponse.persona, {include: [ {model: localidad, as: 'localidad'} ], attributes:{ exclude: ['localidadId'] }})
         .then(persona =>{ 
             console.info("personaController - create - END");
@@ -45,7 +48,7 @@ module.exports = {
 
     update(req, res){
         console.info("personaController - update - START");
-
+        console.log(req.body);
         let verifyResponse = verifyHelper.verifyPersona(req, personaActions.UPDATE);
 
         if(verifyResponse && verifyResponse.errors && verifyResponse.errors.length > 0){
@@ -57,7 +60,8 @@ module.exports = {
                 personas: null
             });
         }
-
+        let nombreFoto = imageHelper.fotoTreatment(req.body.foto, "personaNroCuenta_"+req.body.nroCuenta,"images/user/");
+        verifyResponse.persona.foto = nombreFoto;
         persona.update(verifyResponse.persona,{ where: {id: verifyResponse.persona.id}})
         .then(num => {
             let object = {};
@@ -91,6 +95,7 @@ module.exports = {
         })})
     },
 
+   
     delete(req, res){
         console.info("personaController - delete - START");
         let id = req.body && req.body.id ? req.body.id : null;

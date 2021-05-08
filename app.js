@@ -10,6 +10,9 @@ const app = express();
 // Log para las peticiones
 app.use(logger('dev'));
 
+app.use(express.static('public'));  
+app.use('/images', express.static('images')); 
+
 // Parseador de data en las peticiones
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
