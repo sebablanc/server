@@ -618,6 +618,7 @@ module.exports.verifyHelper = {
                     case "alumnoextractor":
                     case "detalleextraccion":
                     case "tipo":
+                    case "mes":
                     case "createdat":
                     case "updatedat":
                         parsedPremio[key] = req.body[key];
@@ -631,7 +632,7 @@ module.exports.verifyHelper = {
         } else {
             parsedPremio.id = id;
         }
-
+        console.log(parsedPremio);
         console.log("verifyHelper - verifyPremio - END");
         return {errors: errorsList, premio: parsedPremio};
     },
