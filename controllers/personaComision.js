@@ -153,7 +153,7 @@ module.exports = {
         personaComision.findAll({ 
             include: [ {model:persona, as: 'persona'}, {model: comision, as: 'comision'}, {model: asistencia, as: 'asistencias'} ],
             order: ['id'],
-            attributes:{ exclude: ['personaId', 'comisinoId'] },
+            attributes:{ exclude: ['personaId', 'comisionId'] },
             raw: false
         })
         .then(personasComisiones => {
