@@ -16,6 +16,22 @@ module.exports = {
         } catch(err){
             console.log(err)
         }
+    },
+
+    sendEmailConsulta(email, message, callback){
+        mailOptions = {
+            from: email,
+            to: 'softwarebuilderPruebas@gmail.com',
+            subject: 'Consulta enviada desde DRComputersWeb',
+            html: message
+        };
+        try{
+            nodemailer.createTransport(config).sendMail(mailOptions, function(error, info){
+                callback(info);
+            });
+        } catch(err){
+            console.log(err);
+        }
     }
 
 }

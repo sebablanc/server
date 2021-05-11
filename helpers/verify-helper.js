@@ -636,4 +636,40 @@ module.exports.verifyHelper = {
         console.log("verifyHelper - verifyPremio - END");
         return {errors: errorsList, premio: parsedPremio};
     },
+
+    verifyConsulta(req){
+        console.log("verifyHelper - verifyConsulta - START");
+        
+        let keys = req.body ? Object.keys(req.body) : [];
+
+        // creo elementos a devolver
+        let errorsList = [];
+        let parsedConsulta = {};
+
+        // Verifico información principal
+        if(keys == null || keys.length <= 0){
+            errorsList.push(`No se puede aplicar el descuento a la inscripcion ya que no posee datos para realizar la acción.`);
+        } else if(keys.length > 0 && (req.body.nombre == null || req.body.apellido == null || req.body.telefono == null || req.body.email == null || req.body.consulta == null)){
+            errorsList.push('Faltan datos para realizar la consulta.');
+        }
+
+        keys.forEach(key =>{
+            switch (key.toLowerCase()) {
+                case "nombre":
+                case "apellido":
+                case "telefono":
+                case "email":
+                case "consulta":
+                    parsedConsulta[key] = req.body[key];
+                    break;
+                default:
+                    // ERROR - si existe una key distinta a las cinco anteriores, quiere decir que es un parámetro incorrecto
+                    errorsList.push('Se enviaron datos no válidos realizar la consulta.');
+                    break;
+            }
+        });
+
+        console.log("verifyHelper - verifyConsulta - END");
+        return {errors: errorsList, consulta: parsedConsulta};
+    },
 }

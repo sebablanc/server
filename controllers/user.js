@@ -30,7 +30,7 @@ module.exports = {
             
             // habilitar cuando este correctamente implementado el mail de verificación
             //req.headers.origin ----> para obtener la página de procedencia
-            //let emailSended = emailSend.sendEmail(user.email, 'Verificación', 'Este es el mensaje de verificación');
+            let emailSended = emailSend.sendEmail(user.email, 'Verificación', 'Este es el mensaje de verificación');
             return res.status(200).send({
                 exito: true,
                 messages: ['usuario creado correctamente. Se ha enviado un mail de verificación'],

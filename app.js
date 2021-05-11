@@ -38,6 +38,7 @@ require('./routes/personaCursoRoutes')(app);
 require('./routes/novedadRoutes')(app);
 require('./routes/premioRoutes')(app);
 require('./routes/pdfRoutes')(app);
+require('./routes/consultaRoutes')(app);
 
 // seteando puerto
 const port = parseInt(process.env.PORT, 10) || 8000;
