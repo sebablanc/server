@@ -1,5 +1,15 @@
 -------------------------------------------------------------------------------------------
 ------------------------------ Inserción de datos en tabla  -------------------------------
+----------------------------------------- USER --------------------------------------------
+-------------------------------------------------------------------------------------------
+
+INSERT INTO userdr (email, pass, activated, personaId, tipo) VALUES ('aitil@hotmail.com', 'cambiar', false, (SELECT per.id FROM persona per where email = 'aitil@hotmail.com'), 'USER');
+INSERT INTO userdr (email, pass, activated, personaId, tipo) VALUES ('enval@hotmail.com', 'cambiar', false, (SELECT per.id FROM persona per where email = 'enval@hotmail.com'), 'USER');
+INSERT INTO userdr (email, pass, activated, personaId, tipo) VALUES ('antro@hotmail.com', 'cambiar', false, (SELECT per.id FROM persona per where email = 'antro@hotmail.com'), 'USER');
+INSERT INTO userdr (email, pass, activated, personaId, tipo) VALUES ('jetit@gmail.com', 'cambiar', false, (SELECT per.id FROM persona per where email = 'jetit@gmail.com'), 'USER');
+
+-------------------------------------------------------------------------------------------
+------------------------------ Inserción de datos en tabla  -------------------------------
 -------------------------------------- LOCALIDAD ------------------------------------------
 -------------------------------------------------------------------------------------------
 
