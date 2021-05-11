@@ -195,6 +195,16 @@ CREATE TABLE premio(
 	CONSTRAINT pk_premio PRIMARY KEY (id)
 );
 
+CREATE TABLE cursoArchivo(
+	id serial NOT NULL,
+	cursoId smallint NOT NULL,
+	nombreArchivo varchar(255) NOT NULL,
+	createdAt Date,
+    updatedAt Date,
+	CONSTRAINT pk_cursoArchivo PRIMARY KEY (id),
+	CONSTRAINT fk_cursoArchivoCurso FOREIGN KEY (cursoId) REFERENCES curso(id)
+);
+
 -----------------------------------------------------------------------------------
 ----------------------------- Creación de controles -------------------------------
 -----------------------------------------------------------------------------------

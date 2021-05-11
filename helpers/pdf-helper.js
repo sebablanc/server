@@ -5,9 +5,14 @@ const fs = require('fs');
 
 module.exports.pdfHelper = {
     pdfTreatment(pdf, pdfName, folder){
-        var extension = '';
+
+        if (!fs.existsSync(folder)) {
+            fs.mkdirSync(folder, {
+                recursive: true
+            });
+        }
         var base64Data = pdf.replace(/^data:application\/pdf;base64,/, "");
-        fs.writeFile(folder+pdfName+'.pdf', base64Data, 'base64', function(err) {
+        fs.writeFile(folder+'/'+pdfName, base64Data, 'base64', function(err) {
             console.log(err);
         });
 

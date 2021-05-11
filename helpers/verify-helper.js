@@ -632,7 +632,7 @@ module.exports.verifyHelper = {
         } else {
             parsedPremio.id = id;
         }
-        console.log(parsedPremio);
+
         console.log("verifyHelper - verifyPremio - END");
         return {errors: errorsList, premio: parsedPremio};
     },
@@ -671,5 +671,53 @@ module.exports.verifyHelper = {
 
         console.log("verifyHelper - verifyConsulta - END");
         return {errors: errorsList, consulta: parsedConsulta};
+    },
+
+    verifyCursoArchivo(req, cursoArchivoAction){
+        console.log("verifyHelper - verifyCursoArchivo - START");
+        
+        let keys = req.body ? Object.keys(req.body) : [];
+        let id = req.body && req.body.id ? req.body.id : null;
+
+        // creo elementos a devolver
+        let errorsList = [];
+        let parsedCursoArchivo = {};
+
+        // Verifico información principal
+        if(keys == null || keys.length <= 0){
+            errorsList.push('El archivo enviado no tiene ningún atributo para realizar esta acción.');
+        } else if((id == null || id == undefined || id < 1) && (cursoArchivoAction == httpRequestActions.DELETE || cursoArchivoAction == httpRequestActions.UPDATE)){
+            console.error("verifyHelper - verifyCursoArchivo - ERROR: No se envió id", keys);
+            console.info("verifyHelper - verifyCursoArchivo - END");
+            errorsList.push('No se envió un id válido.');
+        } else if(keys.length > 0 && (req.body.nombreArchivo == null || req.body.cursoId == null || req.body.archivo == null) && cursoArchivoAction == httpRequestActions.CREATE){
+            errorsList.push('No se envíaron alguno de los datos requeridos.');
+        }
+
+        if(cursoArchivoAction != httpRequestActions.DELETE){
+            keys.forEach(key =>{
+                switch (key.toLowerCase()) {
+                    case "nombrearchivo":
+                        parsedCursoArchivo[key] = req.body[key]+'.pdf';
+                        break;
+                    case "id":
+                    case "cursoid":
+                    case "archivo":
+                    case "createdat":
+                    case "updatedat":
+                        parsedCursoArchivo[key] = req.body[key];
+                        break;
+                    default:
+                        // ERROR - si existe una key distinta a las cinco anteriores, quiere decir que es un parámetro incorrecto
+                        errorsList.push('Se enviaron datos no válidos para realizar la acción.');
+                        break;
+                }
+            });
+        } else {
+            parsedCursoArchivo.id = id;
+        }
+
+        console.log("verifyHelper - verifyCursoArchivo - END");
+        return {errors: errorsList, cursoArchivo: parsedCursoArchivo};
     },
 }
