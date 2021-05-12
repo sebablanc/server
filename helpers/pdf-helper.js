@@ -19,4 +19,8 @@ module.exports.pdfHelper = {
         return pdfName+'.pdf';
     },
 
+    pdfDownload(folder, pdfName){
+       return folder+'/'+pdfName;
+        
+    }
 }

@@ -698,7 +698,7 @@ module.exports.verifyHelper = {
             keys.forEach(key =>{
                 switch (key.toLowerCase()) {
                     case "nombrearchivo":
-                        parsedCursoArchivo[key] = req.body[key]+'.pdf';
+                        parsedCursoArchivo[key] = req.body[key].replace(' ', '_')+'.pdf';
                         break;
                     case "id":
                     case "cursoid":
